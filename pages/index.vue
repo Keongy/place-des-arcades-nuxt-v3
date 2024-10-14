@@ -1,70 +1,77 @@
 <template>
-  <v-app :theme="themeName">
-    <v-container class="text-center">
-      <h1 class="title">Bienvenue au livret d'accueil Place des arcades</h1>
+  <v-container class="text-center">
+    <h1 class="title">Bienvenue au livret d'accueil Place des arcades</h1>
 
-      <v-switch
-        v-model="isDark"
-        :label="`Mode ${isDark ? 'Sombre' : 'Clair'}`"
-        class="float-right"
-      />
-
-      <!-- Grille des blocs centrée -->
-      <div class="grid-container">
-        <div
-          v-for="(block, index) in blocks"
-          :key="index"
-          class="block"
-          :class="{'block-dark': isDark, 'block-light': !isDark}"
-          @click="navigate(block.route)"
-        >
-          <!-- Utiliser v-icon pour l'icône mdiWifiLock -->
-          <v-icon class="block-icon" size="50">{{ block.icon }}</v-icon>
-          <div class="block-title">{{ block.title }}</div>
+    <!-- Grille des blocs centrée -->
+    <div class="grid-container">
+      <div
+        v-for="(block, index) in blocks"
+        :key="index"
+        class="block"
+        @click="navigate(block.route)"
+      >
+        <v-icon class="block-icon" size="50">{{ block.icon }}</v-icon>
+        <div class="block-title">
+          <p>{{ block.title }}</p>
         </div>
       </div>
-    </v-container>
-  </v-app>
+    </div>
+  </v-container>
 </template>
 
 <script setup>
-import {ref, watch, onMounted} from 'vue';
+import {ref} from 'vue';
 import {useRouter} from 'vue-router';
+
+// Spécifier la transition pour cette page
+definePageMeta({
+  pageTransition: {name: 'slide-down', mode: 'out-in'},
+});
 
 const router = useRouter();
 
-const isDark = ref(false);
-const themeName = ref('light');
-
-watch(isDark, (newVal) => {
-  themeName.value = newVal ? 'dark' : 'light';
-  localStorage.setItem('user-theme', themeName.value);
-});
-
-// Charger la préférence de thème depuis localStorage au démarrage
-onMounted(() => {
-  const savedTheme = localStorage.getItem('user-theme');
-  if (savedTheme) {
-    isDark.value = savedTheme === 'dark';
-    themeName.value = savedTheme;
-  }
-});
-
-// Liste des blocs avec leurs icônes et routes
+// Liste des blocs et routes associées
 const blocks = ref([
   {title: 'Infos arrivée', icon: 'mdi-airplane-landing', route: '/arrival'},
-  {title: 'Infos pratiques', icon: 'mdi-information-box ', route: '/practical'},
+  {title: 'Infos pratiques', icon: 'mdi-information-box', route: '/practical'},
   {title: 'Infos départ', icon: 'mdi-logout', route: '/departure'},
-  {title: 'Wifi', icon: 'mdi-wifi-lock', route: '/wifi'}, // L'icône sera remplacée par mdi-wifi-lock
+  {title: 'Wifi', icon: 'mdi-wifi-lock', route: '/wifi'},
   {title: 'Autour de moi', icon: 'mdi-map-marker-radius', route: '/around-me'},
 ]);
 
+// Fonction de navigation vers les autres pages
 const navigate = (route) => {
   router.push(route);
 };
 </script>
 
 <style scoped>
+/* Transition pour la page d'accueil */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-down-enter-from {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.slide-down-enter-to {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.slide-down-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.slide-down-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
 .title {
   margin-top: 45px;
   margin-bottom: 100px;
@@ -72,9 +79,9 @@ const navigate = (route) => {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 150px); /* 3 colonnes */
-  justify-content: center; /* Centrer les blocs */
-  gap: 20px; /* Espacement de 20px entre les blocs */
+  grid-template-columns: repeat(3, 150px);
+  justify-content: center;
+  gap: 20px;
 }
 
 .block {
@@ -86,17 +93,13 @@ const navigate = (route) => {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  background: rgb(var(--v-theme-surface));
 }
 
-.block-light {
-  background-color: #f5f5f5;
-  color: #000;
-}
-
-.block-dark {
-  background-color: #1e1e1e;
-  color: #fff;
+.block:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .block-icon {
@@ -108,28 +111,15 @@ const navigate = (route) => {
   text-align: center;
 }
 
-.float-right {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-/* Pour les petits écrans */
-@media (max-width: 768px) {
+@media (max-width: 580px) {
   .grid-container {
-    grid-template-columns: repeat(
-      2,
-      150px
-    ); /* 2 colonnes sur les petits écrans */
+    grid-template-columns: repeat(2, 150px);
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 350px) {
   .grid-container {
-    grid-template-columns: repeat(
-      1,
-      150px
-    ); /* 1 colonne sur les très petits écrans */
+    grid-template-columns: repeat(1, 150px);
   }
 }
 </style>

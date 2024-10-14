@@ -7,8 +7,12 @@
       <div
         v-for="(block, index) in blocks"
         :key="index"
-        class="block"
+        class="block v-elevation-2"
         @click="navigate(block.route)"
+        @mouseover="
+          $event.currentTarget.style.backgroundImage = `url(${block.background})`
+        "
+        @mouseleave="$event.currentTarget.style.backgroundImage = ''"
       >
         <v-icon class="block-icon" size="50">{{ block.icon }}</v-icon>
         <div class="block-title">
@@ -22,6 +26,11 @@
 <script setup>
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
+import imgTerminal from '../assets/img/img-terminal.webp';
+import imgMap from '../assets/img/img-map.webp';
+import imgPlane from '../assets/img/img-plane.webp';
+import imgWifi from '../assets/img/img-wifi.webp';
+import imgGps from '../assets/img/img-gps.webp';
 
 // Spécifier la transition pour cette page
 definePageMeta({
@@ -32,11 +41,36 @@ const router = useRouter();
 
 // Liste des blocs et routes associées
 const blocks = ref([
-  {title: 'Infos arrivée', icon: 'mdi-airplane-landing', route: '/arrival'},
-  {title: 'Infos pratiques', icon: 'mdi-information-box', route: '/practical'},
-  {title: 'Infos départ', icon: 'mdi-logout', route: '/departure'},
-  {title: 'Wifi', icon: 'mdi-wifi-lock', route: '/wifi'},
-  {title: 'Autour de moi', icon: 'mdi-map-marker-radius', route: '/around-me'},
+  {
+    background: imgTerminal,
+    title: 'Infos arrivée',
+    icon: 'mdi-airplane-landing',
+    route: '/arrival',
+  },
+  {
+    background: imgMap,
+    title: 'Infos pratiques',
+    icon: 'mdi-information-box',
+    route: '/practical',
+  },
+  {
+    background: imgPlane,
+    title: 'Infos départ',
+    icon: 'mdi-logout',
+    route: '/departure',
+  },
+  {
+    background: imgWifi,
+    title: 'Wifi',
+    icon: 'mdi-wifi-lock',
+    route: '/wifi',
+  },
+  {
+    background: imgGps,
+    title: 'Autour de moi',
+    icon: 'mdi-map-marker-radius',
+    route: '/around-me',
+  },
 ]);
 
 // Fonction de navigation vers les autres pages
@@ -93,17 +127,27 @@ const navigate = (route) => {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
   background: rgb(var(--v-theme-surface));
+  background-position: center;
+  background-size: cover; /* Ajuste l'image pour couvrir tout le bloc */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); /* Élément avec une légère ombre par défaut */
+  position: relative;
 }
 
 .block:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Ombre plus prononcée au survol */
 }
 
 .block-icon {
   margin-bottom: 10px;
+  transition: opacity 0.3s ease; /* Transition fluide de l'opacité */
+}
+
+.block:hover .block-icon {
+  opacity: 0; /* Icône devient invisible au survol */
 }
 
 .block-title {

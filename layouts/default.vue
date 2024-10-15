@@ -15,30 +15,31 @@
 </template>
 
 <script setup>
-import {ref, onMounted, watch} from 'vue';
-import {useTheme} from 'vuetify';
+import { ref, onMounted, watch } from "vue";
+import { useTheme } from "vuetify";
 
 const theme = useTheme();
 const isDark = ref(false); // Etat réactif pour gérer le thème sombre/clair
 
 // Charger le thème depuis le localStorage au montage
 onMounted(() => {
-  const savedTheme = localStorage.getItem('user-theme');
+  const savedTheme = localStorage.getItem("user-theme");
   if (savedTheme) {
-    isDark.value = savedTheme === 'dark';
-    theme.global.name.value = isDark.value ? 'dark' : 'light';
+    isDark.value = savedTheme === "dark";
+    theme.global.name.value = isDark.value ? "dark" : "light";
   }
 });
 
 // Surveiller les changements de isDark et mettre à jour Vuetify
 watch(isDark, (newVal) => {
-  theme.global.name.value = newVal ? 'dark' : 'light';
-  localStorage.setItem('user-theme', newVal ? 'dark' : 'light');
+  theme.global.name.value = newVal ? "dark" : "light";
+  localStorage.setItem("user-theme", newVal ? "dark" : "light");
 });
 </script>
 
 <style>
 .float-right {
+  z-index: 100;
   position: absolute;
   top: 10px;
   right: 10px;

@@ -7,7 +7,7 @@
       <div
         v-for="(block, index) in blocks"
         :key="index"
-        class="block v-elevation-2"
+        class="block v-elevation-4"
         @click="navigate(block.route)"
         @mouseover="
           $event.currentTarget.style.backgroundImage = `url(${block.background})`
@@ -31,6 +31,9 @@ import imgMap from '../assets/img/img-map.webp';
 import imgPlane from '../assets/img/img-plane.webp';
 import imgWifi from '../assets/img/img-wifi.webp';
 import imgGps from '../assets/img/img-gps.webp';
+import imgKey from '../assets/img/img-key.webp';
+import imgEquipement from '../assets/img/img-equipement.webp';
+import imgReglement from '../assets/img/img-reglement.webp';
 
 // Spécifier la transition pour cette page
 definePageMeta({
@@ -42,22 +45,22 @@ const router = useRouter();
 // Liste des blocs et routes associées
 const blocks = ref([
   {
-    background: imgTerminal,
-    title: 'Infos arrivée',
-    icon: 'mdi-airplane-landing',
-    route: '/arrival',
+    background: imgKey,
+    title: "Accéder à l'appartement",
+    icon: 'mdi-key-chain',
+    route: '/keys-delivery',
   },
   {
-    background: imgMap,
-    title: 'Infos pratiques',
-    icon: 'mdi-information-box',
-    route: '/practical',
+    background: imgGps,
+    title: 'Où se garer ?',
+    icon: 'mdi-parking',
+    route: '/parking',
   },
   {
     background: imgPlane,
-    title: 'Infos départ',
-    icon: 'mdi-logout',
-    route: '/departure',
+    title: 'Départ',
+    icon: 'mdi-airplane-takeoff',
+    route: '/check-out',
   },
   {
     background: imgWifi,
@@ -66,10 +69,16 @@ const blocks = ref([
     route: '/wifi',
   },
   {
-    background: imgGps,
-    title: 'Autour de moi',
-    icon: 'mdi-map-marker-radius',
-    route: '/around-me',
+    background: imgEquipement,
+    title: 'Équipements',
+    icon: 'mdi-washing-machine',
+    route: '/equipements',
+  },
+  {
+    background: imgReglement,
+    title: 'Règlement Intérieur',
+    icon: 'mdi-book-open-variant',
+    route: '/internal-regulations',
   },
 ]);
 
